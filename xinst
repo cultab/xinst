@@ -1,22 +1,28 @@
 #!/bin/sh
 
-# usage, flags (-h, -v)
+in=xi
+up=xu
+rem=xr
 
-version="xinst version 0.0.1"
+version=
 
-usage="$0 is a multicall script (think busybox) and 
+__version () {
+    printf '%s' "$0 version $version"
+}
+
+usage="$0 $version is a multicall script (think busybox) and
 behaves differently according to how it's called.
 
 Usage: xinst [OPTION]
    or: xinst <function> [PKGS]
    or: <function> [PKGS]
 
-FUNCTIONS:
-  xi: install PKGS
-  xu: update system
-  xr: remove PKGS
-
 If no PKGS are given, open fzf menu.
+
+FUNCTIONS:
+  $in: install PKGS
+  $up: update system
+  $rem: remove PKGS
 
 OPTIONS:
   -v --version        Print version
@@ -41,26 +47,10 @@ __supported () {
     printf '%s' "$supported"
 }
 
-
-# parse options
-case "$1" in
-    -h|--help)
-        __usage
-        exit 0
-        ;;
-    -v|--version)
-        echo "$version"
-        exit 0
-        ;;
-    -s|--supported)
-        __supported
-        exit 0
-        ;;
-    *)  echo "Unknown option '$1'"
-        __usage
-        exit 0
-        ;;
-esac
+if [ ! "$(command -v fzf)" ]; then
+    printf 'fzf not found!'
+    exit 1
+fi
 
 # requires xbps and xtools pkgs
 if [ "$(command -v xbps-install)" ] && [ "$(command -v xpkg)" ]; then
@@ -111,28 +101,51 @@ __remove () {
 
 # execute function
 case "$0" in
-    *xi) __install "$@"
+    *"$in") __install "$@"
         ;;
-    *xu) __update "$@"
+    *"$up") __update "$@"
         ;;
-    *xr) __remove "$@"
+    *"$rem") __remove "$@"
         ;;
     *xinst)
         case "$1" in
-        xi) shift
+        "$in") shift
             __install "$@"
             ;;
-        xu) shift
+        "$up") shift
             __update "$@"
             ;;
-        xr) shift
+        "$rem") shift
             __remove "$@"
             ;;
-        *)  __usage
+        *) __usage
+            exit 0
             ;;
         esac
         ;;
     *)  __usage
+        exit 0
+        ;;
+esac
+
+# parse options
+case "$1" in
+    -h|--help)
+        __usage
+        exit 0
+        ;;
+    -v|--version)
+        __version
+        exit 0
+        ;;
+    -s|--supported)
+        __supported
+        exit 0
+        ;;
+    '') ;;
+    *)  echo "Unknown option '$1'"
+        __usage
+        exit 0
         ;;
 esac
 
