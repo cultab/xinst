@@ -1,0 +1,140 @@
+#!/bin/sh
+
+# usage, flags (-h, -v)
+
+version="xinst version 0.0.1"
+
+usage="$0 is a multicall script (think busybox) and 
+behaves differently according to how it's called.
+
+Usage: xinst [OPTION]
+   or: xinst <function> [PKGS]
+   or: <function> [PKGS]
+
+FUNCTIONS:
+  xi: install PKGS
+  xu: update system
+  xr: remove PKGS
+
+If no PKGS are given, open fzf menu.
+
+OPTIONS:
+  -v --version        Print version
+  -h --help           Print this text
+  -s --supported      Print list of supported package managers.
+"
+
+__usage () {
+    printf '%s' "$usage"
+}
+
+supported="Currently supported package managers:
++------+------------------+--------------------+
+| tool | used by          | extra requirements |
++------+------------------+--------------------+
+| xbps | Void Linux       | xpkg               |
+| apt  | Debian GNU/Linux |                    |
++------+------------------+--------------------+
+"
+
+__supported () {
+    printf '%s' "$supported"
+}
+
+
+# parse options
+case "$1" in
+    -h|--help)
+        __usage
+        exit 0
+        ;;
+    -v|--version)
+        echo "$version"
+        exit 0
+        ;;
+    -s|--supported)
+        __supported
+        exit 0
+        ;;
+    *)  echo "Unknown option '$1'"
+        __usage
+        exit 0
+        ;;
+esac
+
+# requires xbps and xtools pkgs
+if [ "$(command -v xbps-install)" ] && [ "$(command -v xpkg)" ]; then
+    INSTALL='xbps-install -Suy'
+    REMOVE='xbps-remove -Roy'
+    UPDATE="xbps-install -Su"
+    UPGRADE='true'
+    QUERY='xbps-query -R'
+    GET_ALL='xpkg -a'
+    GET_INSTALLED="xpkg -m"
+fi
+
+# requires apt
+if [ "$(command -v apt-get)"  ]; then
+    INSTALL='apt-get install -y'
+    REMOVE='apt-get remove -y'
+    UPDATE='apt-get update'
+    UPGRADE='apt-get upgrade'
+    QUERY='apt-cache show'
+    GET_ALL='apt-cache pkgnames'
+    GET_INSTALLED='apt-mark showmanual'
+fi
+
+__install () {
+    if [ "$@"  ]; then
+        sudo $INSTALL "$@"
+        return
+    fi
+    $GET_ALL |
+        fzf -m --preview "$QUERY {1}" --preview-window=right:66%:wrap |
+        xargs -ro sudo $INSTALL
+}
+
+__update () {
+    sudo $UPDATE
+    sudo $UPGRADE
+}
+
+__remove () {
+    if [ "$@"  ]; then
+        sudo "$REMOVE" "$@"
+        return
+    fi
+    $GET_INSTALLED |
+        fzf -m --preview "$QUERY {1}" --preview-window=right:66%:wrap |
+        xargs -ro sudo $REMOVE
+}
+
+# execute function
+case "$0" in
+    *xi) __install "$@"
+        ;;
+    *xu) __update "$@"
+        ;;
+    *xr) __remove "$@"
+        ;;
+    *xinst)
+        case "$1" in
+        xi) shift
+            __install "$@"
+            ;;
+        xu) shift
+            __update "$@"
+            ;;
+        xr) shift
+            __remove "$@"
+            ;;
+        *)  __usage
+            ;;
+        esac
+        ;;
+    *)  __usage
+        ;;
+esac
+
+# unset defined functions
+unset __install __update __remove __usage
