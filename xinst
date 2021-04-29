@@ -152,4 +152,4 @@ case "$1" in
 esac
 
 # unset defined functions
-unset __install __update __remove __usage
+unset __install __update __remove __usage __supported __version
