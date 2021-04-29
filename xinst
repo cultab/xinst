@@ -1,14 +1,16 @@
 #!/bin/sh
 
-in=xi
-up=xu
-rem=xr
-
+# version defined when installing by makefile
 version=
 
 __version () {
     printf '%s' "$0 version $version"
 }
+
+# also defined when installing
+in=
+up=
+rem=
 
 usage="$0 $version is a multicall script (think busybox) and
 behaves differently according to how it's called.
