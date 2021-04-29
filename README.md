@@ -27,5 +27,5 @@ By default the 3 functions are named xi, xu and xr, to install, remove and updat
 They can be changed by editing the makefile's 3 variables, \$(IN), \$(UP) and \$(REM).
 
 Note: it's not a good idea to change those variables before first uninstalling xinst, because the uninstall rule uses them.
-First `make uninstall` and only after that then change them.
+First `make uninstall` and only then change them.
 
