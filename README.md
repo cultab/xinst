@@ -17,7 +17,7 @@ See #Configuring on how to change the names of these functions.
 Installing
 ----------
 
-Simply running `# make install` will install xinst into /usr/local/bin. Instalation prefix can be tweaked by passing a `$PREFIX` variable to `make install`.
+Simply running `# make install` will install xinst into /usr/local/bin. Installation prefix can be tweaked by passing a `$PREFIX` variable to `make install`.
 
 
 Configuring
