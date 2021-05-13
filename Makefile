@@ -18,7 +18,7 @@ options:
 	@echo "$(REM) for removing"
 
 install:
-	sed "s/version=/version=$(VERSION)/; s/in=/in=$(IN)/;  s/up=/up=$(UP)/; s/rem=/rem=$(REM)/" < xinst > $(DESTDIR)$(PREFIX)/bin/xinst
+	sed "s/version=dummy/version=$(VERSION)/; s/in=xi/in=$(IN)/;  s/up=xu/up=$(UP)/; s/rem=xr/rem=$(REM)/" < xinst > $(DESTDIR)$(PREFIX)/bin/xinst
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/xinst
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(IN)
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(UP)
