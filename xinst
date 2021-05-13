@@ -59,7 +59,6 @@ if [ "$(command -v xbps-install)" ] && [ "$(command -v xpkg)" ]; then
     INSTALL='xbps-install -Suy'
     REMOVE='xbps-remove -Roy'
     UPDATE="xbps-install -Suy"
-    UPGRADE='true'
     QUERY='xbps-query -R'
     GET_ALL='xpkg -a'
     GET_INSTALLED="xpkg -m"
@@ -88,7 +87,9 @@ __install () {
 
 __update () {
     sudo $UPDATE
-    sudo $UPGRADE
+    if [ "$UPGRADE" ]; then
+        sudo $UPGRADE
+    fi
 }
 
 __remove () {
