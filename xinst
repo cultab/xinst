@@ -23,12 +23,12 @@ If no PKGS are given, open fzf menu.
 
 FUNCTIONS:
   $in: install PKGS
-  $up: update system
+  $up: update all PKGS
   $rem: remove PKGS
 
 OPTIONS:
-  -v --version        Print version
-  -h --help           Print this text
+  -v --version        Print version.
+  -h --help           Print this text.
   -s --supported      Print list of supported package managers.
 "
 
