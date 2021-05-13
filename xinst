@@ -58,7 +58,7 @@ fi
 if [ "$(command -v xbps-install)" ] && [ "$(command -v xpkg)" ]; then
     INSTALL='xbps-install -Suy'
     REMOVE='xbps-remove -Roy'
-    UPDATE="xbps-install -Su"
+    UPDATE="xbps-install -Suy"
     UPGRADE='true'
     QUERY='xbps-query -R'
     GET_ALL='xpkg -a'
@@ -70,7 +70,7 @@ if [ "$(command -v apt-get)"  ]; then
     INSTALL='apt-get install -y'
     REMOVE='apt-get remove -y'
     UPDATE='apt-get update'
-    UPGRADE='apt-get upgrade'
+    UPGRADE='apt-get upgrade -y'
     QUERY='apt-cache show'
     GET_ALL='apt-cache pkgnames'
     GET_INSTALLED='apt-mark showmanual'
