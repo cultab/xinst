@@ -4,7 +4,7 @@ PREFIX = /usr/local
 #MANPREFIX = $(PREFIX)/share/man
 
 # function names
-IN  := xi
+IN  := xf
 UP  := xu
 REM := xr
 

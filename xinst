@@ -8,7 +8,7 @@ __version () {
 }
 
 # also defined when installing
-in=xi
+in=xf
 up=xu
 rem=xr
 
@@ -58,7 +58,7 @@ fi
 if [ "$(command -v xbps-install)" ] && [ "$(command -v xpkg)" ]; then
     INSTALL='xbps-install -Suy'
     REMOVE='xbps-remove -Roy'
-    UPDATE="xbps-install -Suy"
+    UPDATE="xbps-install -Su"
     QUERY='xbps-query -R'
     GET_ALL='xpkg -a'
     GET_INSTALLED="xpkg -m"
