@@ -50,15 +50,20 @@ __supported () {
 }
 
 if [ ! "$(command -v fzf)" ]; then
-    printf 'fzf not found!'
+    echo 'fzf not found!'
     exit 1
 fi
 
 # requires xbps and xtools pkgs
-if [ "$(command -v xbps-install)" ] && [ "$(command -v xpkg)" ]; then
+if [ "$(command -v xbps-install)" ]; then
+    if [ ! "$(command -v xkg)" ]; then
+        printf 'xpkg not found!\n\tyou can install it with `xbps-install xtools`\n'
+        exit 1
+    fi
     INSTALL='xbps-install -Suy'
     REMOVE='xbps-remove -Roy'
     UPDATE="xbps-install -Su"
+    UPDATE_SELF="xbps-install -u xbps"
     QUERY='xbps-query -R'
     GET_ALL='xpkg -a'
     GET_INSTALLED="xpkg -m"
@@ -70,6 +75,7 @@ if [ "$(command -v apt-get)"  ]; then
     REMOVE='apt-get remove -y'
     UPDATE='apt-get update'
     UPGRADE='apt-get upgrade -y'
+    UPDATE_SELF='false'
     QUERY='apt-cache show'
     GET_ALL='apt-cache pkgnames'
     GET_INSTALLED='apt-mark showmanual'
@@ -86,7 +92,8 @@ __install () {
 }
 
 __update () {
-    sudo $UPDATE
+    # if updating fails, try updating our package manager first, then retry
+    sudo $UPDATE || sudo $UPDATE_SELF || sudo $UPDATE
     if [ "$UPGRADE" ]; then
         sudo $UPGRADE
     fi
@@ -94,7 +101,7 @@ __update () {
 
 __remove () {
     if [ "$@"  ]; then
-        sudo "$REMOVE" "$@"
+        sudo $REMOVE "$@"
         return
     fi
     $GET_INSTALLED |
