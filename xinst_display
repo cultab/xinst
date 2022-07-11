@@ -1,0 +1,9 @@
+#!/bin/sh
+printf '%s\n' "$version"
+printf '%s\n' "$desc"
+printf '%s\n' "$homepage"
+printf 'size: %s\n' "$installed_size"
+printf '%s\n' "$arch"
+printf '%s\n' "$license"
+printf '%s\n' "$run_depends"
+printf '%s\n' "$shlib_requires"

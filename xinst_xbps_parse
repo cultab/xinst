@@ -1,0 +1,25 @@
+#!/bin/sh
+input=$(cat; echo E)
+input=${input%E}
+
+field() {
+    echo "$input" | grep "^$*:"
+}
+
+value() {
+    cat | cut -d ':' -f 2 | sed 's/^\s//g'
+}
+
+arch=$(field 'architecture')
+installed_size=$(field 'installed_size' | value)
+license=$(field 'license')
+name=$(field 'pkgname' | value)
+desc=$(field 'short_desc' | value)
+version=$(field 'pkgver' | value)
+homepage=$(field 'homepage')
+run_depends=$(echo "$input" | awk '/run_depends/,/shlib-requires|short_desc/' | head -n-1)
+shlib_requires=$(echo "$input" | awk '/shlib-requires/,/short_desc/' | head -n-1)
+
+export arch installed_size license name desc version homepage run_depends shlib_requires
+
+xinst_display

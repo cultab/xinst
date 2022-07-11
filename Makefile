@@ -24,11 +24,17 @@ install:
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(UP)
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(REM)
 
+	install xinst_xbps_parse $(DESTDIR)$(PREFIX)/bin/xinst_xbps_parse
+	install xinst_display $(DESTDIR)$(PREFIX)/bin/xinst_display
+
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/xinst
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(IN)
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(UP)
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(REM)
+
+	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_xbps_parse
+	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_display
 
 link:
 	ln -rf xinst $(IN)

@@ -56,8 +56,8 @@ fi
 
 # requires xbps and xtools pkgs
 if [ "$(command -v xbps-install)" ]; then
-    if [ ! "$(command -v xkg)" ]; then
-        printf 'xpkg not found!\n\tyou can install it with `xbps-install xtools`\n'
+    if [ ! "$(command -v xpkg)" ]; then
+        printf 'xpkg not found!\n\tyou can install it with "xbps-install xtools"\n'
         exit 1
     fi
     INSTALL='xbps-install -Suy'
@@ -67,6 +67,7 @@ if [ "$(command -v xbps-install)" ]; then
     QUERY='xbps-query -R'
     GET_ALL='xpkg -a'
     GET_INSTALLED="xpkg -m"
+    PARSE_INFO="xinst_xbps_parse"
 fi
 
 # requires apt
@@ -81,13 +82,19 @@ if [ "$(command -v apt-get)"  ]; then
     GET_INSTALLED='apt-mark showmanual'
 fi
 
+if [ -z "$INSTALL" ]; then
+    echo "Your package manager is not supported, yet."
+    __supported
+    exit 1
+fi
+
 __install () {
-    if [ "$@"  ]; then
+    if [ "$@" ]; then
         sudo $INSTALL "$@"
         return
     fi
     $GET_ALL |
-        fzf -m --preview "$QUERY {1}" --preview-window=right:66%:wrap |
+        fzf -m --preview "$QUERY {1} | $PARSE_INFO" --preview-window=right:66%:wrap |
         xargs -ro sudo $INSTALL
 }
 
@@ -100,7 +107,7 @@ __update () {
 }
 
 __remove () {
-    if [ "$@"  ]; then
+    if [ "$@" ]; then
         sudo $REMOVE "$@"
         return
     fi
