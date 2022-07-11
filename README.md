@@ -29,3 +29,31 @@ They can be changed by editing the makefile's 3 variables, $(IN), $(UP) and $(RE
 Note: it's not a good idea to change those variables before first uninstalling xinst, because the uninstall rule uses them.
 First `make uninstall` and only then change them.
 
+TODO
+----
+
+## Maybe support multiple package managers at the same time?
+
+xbps <pkg> <version>
+flatpak <pkg> <version>
+other_pkg_mngr <pkg> <version>
+
+### How?
+
+sort by first word
+switch on first word of selection
+sort into queues
+install with one call to each pkg manager
+[maybe it's time to move to a more robust lang?]
+
+## Better preview
+
+[*] xbps
+[ ] apt
+
+## More package managers
+
+* flatpak
+* pacman (arch)
+* apk    (alpine)
+* ????   (openSUSE)
