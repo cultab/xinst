@@ -34,9 +34,11 @@ TODO
 
 ## Maybe support multiple package managers at the same time?
 
-xbps <pkg> <version>
-flatpak <pkg> <version>
-other_pkg_mngr <pkg> <version>
+`xbps <pkg> <version>`
+
+`flatpak <pkg> <version>`
+
+`other_pkg_mngr <pkg> <version>`
 
 ### How?
 
@@ -44,16 +46,18 @@ sort by first word
 switch on first word of selection
 sort into queues
 install with one call to each pkg manager
-[maybe it's time to move to a more robust lang?]
+
+maybe it's time to move to a more robust language?
 
 ## Better preview
 
-[*] xbps
-[ ] apt
+- [x] xbps
+- [ ] apt
 
 ## More package managers
 
-* flatpak
-* pacman (arch)
-* apk    (alpine)
-* ????   (openSUSE)
+- [x] xbps
+- [ ] flatpak (might need a cache?)
+- [ ] pacman (arch)
+- [ ] apk (alpine)
+- [ ] ???? (openSUSE)
