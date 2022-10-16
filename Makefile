@@ -25,8 +25,8 @@ install:
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(UP)
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(REM)
 
-	install xinst_parse_xbps $(DESTDIR)$(PREFIX)/bin/xinst_xbps_parse
-	install xinst_parse_apt $(DESTDIR)$(PREFIX)/bin/xinst_xbps_apt
+	install xinst_parse_xbps $(DESTDIR)$(PREFIX)/bin/xinst_parse_xbps
+	install xinst_parse_apt $(DESTDIR)$(PREFIX)/bin/xinst_parse_apt
 	install xinst_display $(DESTDIR)$(PREFIX)/bin/xinst_display
 
 uninstall:
@@ -35,7 +35,8 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(UP)
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(REM)
 
-	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_xbps_parse
+	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_parse_xbps
+	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_parse_apt
 	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_display
 
 link:
