@@ -1,0 +1,15 @@
+# Template file for 'xinst'
+pkgname=xinst
+version=0.2.2
+revision=1
+build_style=gnu-makefile
+# hostmakedepends=""
+# makedepends=""
+depends="fzf"
+short_desc="Package install menu based on fzf supporting ~many~ package managers"
+maintainer="cultab <rroarck@gmail.com>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/cultab/xinst"
+#changelog=""
+distfiles="${homepage}/archive/refs/tags/v${version}.tar.gz"
+checksum=cd77fdbcf3d3232f360f61261e8bc1740180de802d76c63d61cb71b9cc02f2db
