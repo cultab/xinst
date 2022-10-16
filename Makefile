@@ -1,6 +1,6 @@
 VERSION = 0.2.1
 
-PREFIX = /usr/local
+PREFIX := /usr/local
 #MANPREFIX = $(PREFIX)/share/man
 
 # function names
@@ -18,6 +18,7 @@ options:
 	@echo "$(REM) for removing"
 
 install:
+	mkdir $(DESTDIR)$(PREFIX)/bin
 	sed "s/version=dummy/version=$(VERSION)/; s/in=xi/in=$(IN)/;  s/up=xu/up=$(UP)/; s/rem=xr/rem=$(REM)/" < xinst > $(DESTDIR)$(PREFIX)/bin/xinst
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/xinst
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(IN)
