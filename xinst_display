@@ -1,9 +1,13 @@
 #!/bin/sh
-printf '%s\n' "$version"
-printf '%s\n' "$desc"
-printf '%s\n' "$homepage"
-printf 'size: %s\n' "$installed_size"
-printf '%s\n' "$arch"
-printf '%s\n' "$license"
-printf '%s\n' "$run_depends"
-printf '%s\n' "$shlib_requires"
+printf 'Name:     %s\n' "$name"
+printf 'Version:  %s\n' "$version"
+printf 'Desc:     %s\n' "$desc"
+printf 'Homepage: %s\n' "$homepage"
+if [ "$installed_size" ]; then
+    printf 'Size:     %s\n' "$installed_size"
+fi
+printf 'Arch:     %s\n' "$arch"
+if [ "$license" ]; then
+    printf 'License:  %s\n' "$license"
+fi
+printf 'Depends:  %s\n' "$depends"

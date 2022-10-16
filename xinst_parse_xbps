@@ -10,16 +10,18 @@ value() {
     cat | cut -d ':' -f 2 | sed 's/^\s//g'
 }
 
-arch=$(field 'architecture')
+arch=$(field 'architecture' | value)
 installed_size=$(field 'installed_size' | value)
-license=$(field 'license')
+license=$(field 'license' | value)
 name=$(field 'pkgname' | value)
 desc=$(field 'short_desc' | value)
 version=$(field 'pkgver' | value)
-homepage=$(field 'homepage')
-run_depends=$(echo "$input" | awk '/run_depends/,/shlib-requires|short_desc/' | head -n-1)
-shlib_requires=$(echo "$input" | awk '/shlib-requires/,/short_desc/' | head -n-1)
+homepage=$(field 'homepage' | value)
+#                                   from          to                            remove last       remove first
+run_depends=$(echo "$input" | awk '/run_depends/,/shlib-requires|short_desc/' | head --lines=-1 | tail --lines=+2 | sed '1 s/\s//')
+shlib_requires=$(echo "$input" | awk '/shlib-requires/,/short_desc/' | head --lines=-1)
+depends=$(printf "%s\n%s" "$run_depends" "$shlib_requires" | sed 's/\s/          /g' | sed 's/shlib-requires:/Required libraries:/')
 
-export arch installed_size license name desc version homepage run_depends shlib_requires
+export arch installed_size license name desc version homepage depends
 
 xinst_display

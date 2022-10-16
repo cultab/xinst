@@ -3,7 +3,7 @@
 # version defined when installing by makefile
 version=dummy
 
-__version () {
+version () {
     printf '%s' "$0 version $version"
 }
 
@@ -32,7 +32,7 @@ OPTIONS:
   -s --supported      Print list of supported package managers.
 "
 
-__usage () {
+usage () {
     printf '%s' "$usage"
 }
 
@@ -45,7 +45,7 @@ supported="Currently supported package managers:
 +------+------------------+--------------------+
 "
 
-__supported () {
+supported () {
     printf '%s' "$supported"
 }
 
@@ -54,10 +54,10 @@ if [ ! "$(command -v fzf)" ]; then
     exit 1
 fi
 
-# requires xbps and xtools pkgs
+# requires xbps and xtools
 if [ "$(command -v xbps-install)" ]; then
     if [ ! "$(command -v xpkg)" ]; then
-        printf 'xpkg not found!\n\tyou can install it with "xbps-install xtools"\n'
+        printf 'xpkg not found!\n\tyou can install it with `# xbps-install xtools`\n'
         exit 1
     fi
     INSTALL='xbps-install -Suy'
@@ -80,25 +80,26 @@ if [ "$(command -v apt-get)"  ]; then
     QUERY='apt-cache show'
     GET_ALL='apt-cache pkgnames'
     GET_INSTALLED='apt-mark showmanual'
+    PARSE_INFO="xinst_parse_apt"
 fi
 
 if [ -z "$INSTALL" ]; then
-    echo "Your package manager is not supported, yet."
-    __supported
+    echo "Your package manager is not supported"
+    supported
     exit 1
 fi
 
-__install () {
+VIEW="fzf -m --preview '$QUERY {1} | $PARSE_INFO' --preview-window=right:66%:wrap"
+
+install () {
     if [ "$@" ]; then
         sudo $INSTALL "$@"
         return
     fi
-    $GET_ALL |
-        fzf -m --preview "$QUERY {1} | $PARSE_INFO" --preview-window=right:66%:wrap |
-        xargs -ro sudo $INSTALL
+    $GET_ALL | $VIEW | xargs -ro sudo $INSTALL
 }
 
-__update () {
+update () {
     # if updating fails, try updating our package manager first, then retry
     sudo $UPDATE || sudo $UPDATE_SELF || sudo $UPDATE
     if [ "$UPGRADE" ]; then
@@ -106,41 +107,39 @@ __update () {
     fi
 }
 
-__remove () {
+remove () {
     if [ "$@" ]; then
         sudo $REMOVE "$@"
         return
     fi
-    $GET_INSTALLED |
-        fzf -m --preview "$QUERY {1}" --preview-window=right:66%:wrap |
-        xargs -ro sudo $REMOVE
+    $GET_INSTALLED | $VIEW | xargs -ro sudo $REMOVE
 }
 
 # execute function
 case "$0" in
-    *"$in") __install "$@"
+    *"$in") install "$@"
         ;;
-    *"$up") __update "$@"
+    *"$up") update "$@"
         ;;
-    *"$rem") __remove "$@"
+    *"$rem") remove "$@"
         ;;
     *xinst)
         case "$1" in
         "$in") shift
-            __install "$@"
+            install "$@"
             ;;
         "$up") shift
-            __update "$@"
+            update "$@"
             ;;
         "$rem") shift
-            __remove "$@"
+            remove "$@"
             ;;
-        *) __usage
+        *) usage
             exit 0
             ;;
         esac
         ;;
-    *)  __usage
+    *)  usage
         exit 0
         ;;
 esac
@@ -148,23 +147,23 @@ esac
 # parse options
 case "$1" in
     -h|--help)
-        __usage
+        usage
         exit 0
         ;;
     -v|--version)
-        __version
+        version
         exit 0
         ;;
     -s|--supported)
-        __supported
+        supported
         exit 0
         ;;
     '') ;;
     *)  echo "Unknown option '$1'"
-        __usage
+        usage
         exit 0
         ;;
 esac
 
 # unset defined functions
-unset __install __update __remove __usage __supported __version
+unset install update remove usage supported version

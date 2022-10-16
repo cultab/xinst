@@ -1,0 +1,24 @@
+#!/bin/sh
+input=$(cat; echo E)
+input=${input%E}
+
+field() {
+    echo "$input" | grep "^$*:" | sed '0,/:/{s/:/#/}'
+}
+
+value() {
+    cat | cut -d '#' -f 2 | sed 's/^\s//g'
+}
+
+arch=$(field 'Architecture' | value)
+installed_size=$(field 'Installed-Size' | value)
+# license=$(field 'license')
+name=$(field 'Package' | value)
+desc=$(field 'Description-en' | value)
+version=$(field 'Version' | value)
+homepage=$(field 'Homepage' | value)
+depends=$(echo "$input" | awk '/Depends/,/Suggests|Description-en/' | sed 's/Depends:\s//' | sed 's/,/\n         /g')
+
+export arch installed_size license name desc version homepage depends
+
+xinst_display
