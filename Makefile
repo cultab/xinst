@@ -10,7 +10,7 @@ REM := xr
 
 options:
 	@echo "xinst will be installed into: $(DESTDIR)$(PREFIX)/bin"
-	@echo 'run `$$ make install`, to do so'
+	@echo 'run `# make install`, to do so'
 	@echo
 	@echo 'functions will be named:'
 	@echo "$(IN) for installing"
