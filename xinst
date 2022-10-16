@@ -89,14 +89,17 @@ if [ -z "$INSTALL" ]; then
     exit 1
 fi
 
-VIEW="fzf -m --preview '$QUERY {1} | $PARSE_INFO' --preview-window=right:66%:wrap"
+select_menu() {
+    fzf -m --preview "$QUERY {1} | $PARSE_INFO" --preview-window=right:66%:wrap
+}
+
 
 install () {
     if [ "$@" ]; then
         sudo $INSTALL "$@"
         return
     fi
-    $GET_ALL | $VIEW | xargs -ro sudo $INSTALL
+    $GET_ALL | select_menu | xargs -ro sudo $INSTALL
 }
 
 update () {
@@ -112,7 +115,7 @@ remove () {
         sudo $REMOVE "$@"
         return
     fi
-    $GET_INSTALLED | $VIEW | xargs -ro sudo $REMOVE
+    $GET_INSTALLED | select_menu | xargs -ro sudo $REMOVE
 }
 
 # execute function
@@ -134,7 +137,8 @@ case "$0" in
         "$rem") shift
             remove "$@"
             ;;
-        *) usage
+        *)  echo "$0: Unknown command '$1'"
+            usage
             exit 0
             ;;
         esac
@@ -159,7 +163,7 @@ case "$1" in
         exit 0
         ;;
     '') ;;
-    *)  echo "Unknown option '$1'"
+    *)  echo "$0: Unknown option '$1'"
         usage
         exit 0
         ;;
