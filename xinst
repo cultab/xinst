@@ -67,7 +67,7 @@ if [ "$(command -v xbps-install)" ]; then
     QUERY='xbps-query -R'
     GET_ALL='xpkg -a'
     GET_INSTALLED="xpkg -m"
-    PARSE_INFO="xinst_xbps_parse"
+    PARSE_INFO="xinst_parse_xbps"
 fi
 
 # requires apt
