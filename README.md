@@ -24,7 +24,7 @@ Configuring
 -----------
 
 By default the 3 functions are named xi, xu and xr, to install, remove and update respectively.
-They can be changed by editing the makefile's 3 variables, $(IN), $(UP) and $(REM).
+They can be changed by editing the makefile's 3 variables, $IN, $UP and $REM.
 
 Note: it's not a good idea to change those variables before first uninstalling xinst, because the uninstall rule uses them.
 First `make uninstall` and only then change them.
@@ -32,7 +32,7 @@ First `make uninstall` and only then change them.
 TODO
 ----
 
-## Maybe support multiple package managers at the same time?
+### Maybe support multiple package managers at the same time?
 
 `xbps <pkg> <version>`
 
@@ -40,7 +40,7 @@ TODO
 
 `other_pkg_mngr <pkg> <version>`
 
-### How?
+#### How?
 
 sort by first word
 switch on first word of selection
@@ -49,14 +49,15 @@ install with one call to each pkg manager
 
 maybe it's time to move to a more robust language?
 
-## Better preview
+### Better preview
 
 - [x] xbps
-- [ ] apt
+- [x] apt
 
-## More package managers
+### More package managers
 
 - [x] xbps
+- [x] apk
 - [ ] flatpak (might need a cache?)
 - [ ] pacman (arch)
 - [ ] apk (alpine)
