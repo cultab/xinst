@@ -16,7 +16,8 @@ license=$(field 'license' | value)
 name=$(field 'pkgname' | value)
 desc=$(field 'short_desc' | value)
 version=$(field 'pkgver' | value)
-homepage=$(field 'homepage' | value)
+# escape : character that's also used as delimiter
+homepage=$(field 'homepage' | sed -E 's/(https?):/\1<colon>/' | value | sed -E 's/(https?)<colon>/\1:/')
 #                                   from          to                            remove last       remove first
 run_depends=$(echo "$input" | awk '/run_depends/,/shlib-requires|short_desc/' | head --lines=-1 | tail --lines=+2 | sed '1 s/\s//')
 shlib_requires=$(echo "$input" | awk '/shlib-requires/,/short_desc/' | head --lines=-1)

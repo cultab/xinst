@@ -13,18 +13,16 @@ up=xu
 rem=xr
 
 usage="$0 $version is a multicall script (think busybox) and
-behaves differently according to how it's called.
+behaves differently according to it's commandline name.
 
 Usage: xinst [OPTION]
-   or: xinst <function> [PKGS]
-   or: <function> [PKGS]
-
-If no PKGS are given, open fzf menu.
+   or: xinst <function>
+   or: <function>
 
 FUNCTIONS:
-  $in: install PKGS
-  $up: update all PKGS
-  $rem: remove PKGS
+  $in: install packages
+  $up: update all packages
+  $rem: remove packages
 
 OPTIONS:
   -v --version        Print version.
@@ -115,7 +113,8 @@ remove () {
         sudo $REMOVE "$@"
         return
     fi
-    $GET_INSTALLED | select_menu | xargs -ro sudo $REMOVE
+    #try removing each pkg in a separate call
+    $GET_INSTALLED | select_menu | xargs -ro -n1 sudo $REMOVE
 }
 
 # execute function

@@ -1,4 +1,4 @@
-VERSION = 0.2.2
+VERSION = 0.3.0
 
 PREFIX := /usr/local
 #MANPREFIX = $(PREFIX)/share/man
@@ -19,6 +19,7 @@ options:
 
 install:
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	rm -f $(DESTDIR)$(PREFIX)/bin/xinst
 	sed "s/version=dummy/version=$(VERSION)/; s/in=xi/in=$(IN)/;  s/up=xu/up=$(UP)/; s/rem=xr/rem=$(REM)/" < xinst > $(DESTDIR)$(PREFIX)/bin/xinst
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/xinst
 	ln -sf xinst $(DESTDIR)$(PREFIX)/bin/$(IN)
