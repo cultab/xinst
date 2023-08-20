@@ -66,9 +66,10 @@ if [ "$(command -v xbps-install)" ]; then
     GET_ALL='xpkg -a'
     GET_INSTALLED="xpkg -m"
     PARSE_INFO="xinst_parse_xbps"
+    FILES="xbps-query -f"
 fi
 
-# requires apt
+# requires apt and dpkg obviously
 if [ "$(command -v apt-get)"  ]; then
     INSTALL='apt-get install -y'
     REMOVE='apt-get remove -y'
@@ -79,10 +80,11 @@ if [ "$(command -v apt-get)"  ]; then
     GET_ALL='apt-cache pkgnames'
     GET_INSTALLED='apt-mark showmanual'
     PARSE_INFO="xinst_parse_apt"
+    FILES="dpkg-query -L"
 fi
 
 if [ -z "$INSTALL" ]; then
-    echo "Your package manager is not supported"
+    echo "Your package manager is not supported.. yet?"
     supported
     exit 1
 fi
@@ -97,7 +99,13 @@ install () {
         sudo $INSTALL "$@"
         return
     fi
-    $GET_ALL | select_menu | xargs -ro sudo $INSTALL
+    pkgs=$($GET_ALL | select_menu)
+    if sudo $INSTALL "$pkgs"; then
+        for pkg in $pkgs; do
+            echo "Binaries installed from $pkg:"
+            printf "  %s\n" $($FILES "$pkg" | grep '.*/bin/.*')
+        done
+    fi
 }
 
 update () {
