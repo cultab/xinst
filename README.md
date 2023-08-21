@@ -23,7 +23,7 @@ Simply running `# make install` will install xinst into /usr/local/bin. Installa
 Configuring
 -----------
 
-By default the 3 functions are named xi, xu and xr, to install, remove and update respectively.
+By default the 3 functions are named xf (xinst find), xu (xinst update) and xr (xinst remove), to install, remove and update respectively.
 They can be changed by editing the makefile's 3 variables, $IN, $UP and $REM.
 
 Note: it's not a good idea to change those variables before first uninstalling xinst, because the uninstall rule uses them.
