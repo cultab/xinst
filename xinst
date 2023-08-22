@@ -100,7 +100,7 @@ install () {
         return
     fi
     pkgs=$($GET_ALL | select_menu)
-    if sudo $INSTALL "$pkgs"; then
+    if sudo $INSTALL $pkgs; then
         for pkg in $pkgs; do
             echo "Binaries installed from $pkg:"
             printf "  %s\n" $($FILES "$pkg" | grep '.*/bin/.*')
