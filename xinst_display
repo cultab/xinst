@@ -6,7 +6,9 @@ printf 'Homepage: %s\n' "$homepage"
 if [ "$installed_size" ]; then
     printf 'Size:     %s\n' "$installed_size"
 fi
-printf 'Arch:     %s\n' "$arch"
+if [ "$arch" ]; then
+    printf 'Arch:     %s\n' "$arch"
+fi
 if [ "$license" ]; then
     printf 'License:  %s\n' "$license"
 fi

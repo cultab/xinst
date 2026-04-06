@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=2086 # superfluous warning when running variables as commands
+
 # version defined when installing by makefile
 version=dummy
 
@@ -40,6 +42,7 @@ supported="Currently supported package managers:
 +------+------------------+--------------------+
 | xbps | Void Linux       | xpkg               |
 | apt  | Debian GNU/Linux |                    |
+| brew | MacOS or Linux   | jq                 |
 +------+------------------+--------------------+
 "
 
@@ -55,9 +58,10 @@ fi
 # requires xbps and xtools
 if [ "$(command -v xbps-install)" ]; then
     if [ ! "$(command -v xpkg)" ]; then
-        printf 'xpkg not found!\n\tyou can install it with `# xbps-install xtools`\n'
+        printf 'xpkg not found!\n\tyou can install it with "# xbps-install xtools"\n'
         exit 1
     fi
+    SUDO="sudo"
     INSTALL='xbps-install -Suy'
     REMOVE='xbps-remove -Roy'
     UPDATE="xbps-install -Su"
@@ -69,8 +73,9 @@ if [ "$(command -v xbps-install)" ]; then
     FILES="xbps-query -f"
 fi
 
-# requires apt and dpkg obviously
+# requires apt and dpkg
 if [ "$(command -v apt-get)"  ]; then
+    SUDO="sudo"
     INSTALL='apt-get install -y'
     REMOVE='apt-get remove -y'
     UPDATE='apt-get update'
@@ -81,6 +86,25 @@ if [ "$(command -v apt-get)"  ]; then
     GET_INSTALLED='apt-mark showmanual'
     PARSE_INFO="xinst_parse_apt"
     FILES="dpkg-query -L"
+fi
+
+# requires brew and jq
+if [ "$(command -v brew)"  ]; then
+    if [ ! "$(command -v jq)" ]; then
+        printf 'jq not found!\n\tyou can install it with "# brew install jq"\n'
+        exit 1
+    fi
+    SUDO="sudo -u $USER"
+    INSTALL='brew install'
+    REMOVE='brew uninstall'
+    UPDATE='brew update'
+    UPGRADE='brew upgrade'
+    UPDATE_SELF='false'
+    QUERY='brew info --json'
+    GET_ALL='brew formulae'
+    GET_INSTALLED='brew list --installed-on-request'
+    PARSE_INFO="xinst_parse_brew"
+    FILES="brew list"
 fi
 
 if [ -z "$INSTALL" ]; then
@@ -96,29 +120,33 @@ select_menu() {
 
 install () {
     if [ "$@" ]; then
-        sudo $INSTALL "$@"
+        $SUDO $INSTALL "$@"
         return
     fi
     pkgs=$($GET_ALL | select_menu)
-    if sudo $INSTALL $pkgs; then
-        for pkg in $pkgs; do
-            echo "Binaries installed from $pkg:"
-            printf "  %s\n" $($FILES "$pkg" | grep '.*/bin/.*')
-        done
-    fi
+    if [ "$pkgs" ]; then
+        if $SUDO $INSTALL $pkgs; then
+            if [ "$(command -v $FILES)" ]; then
+                for pkg in $pkgs; do
+                    echo "Binaries installed from $pkg:"
+                    printf "  %s\n" "$($FILES "$pkg" | grep '.*/bin/.*')"
+                done
+            fi
+        fi
+    fi 
 }
 
 update () {
     # if updating fails, try updating our package manager first, then retry
-    sudo $UPDATE || sudo $UPDATE_SELF || sudo $UPDATE
+    $SUDO $UPDATE || $SUDO $UPDATE_SELF || $SUDO $UPDATE
     if [ "$UPGRADE" ]; then
-        sudo $UPGRADE
+        $SUDO $UPGRADE
     fi
 }
 
 remove () {
     if [ "$@" ]; then
-        sudo $REMOVE "$@"
+        $SUDO $REMOVE "$@"
         return
     fi
     #try removing each pkg in a separate call

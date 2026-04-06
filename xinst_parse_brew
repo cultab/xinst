@@ -1,0 +1,22 @@
+#!/bin/sh
+input=$(cat; echo E)
+input=${input%E}
+
+field() {
+    echo "$input" | jq -r '.[0].'"$*"
+}
+
+# arch=$(field 'Architecture')
+# installed_size=$(field 'Installed-Size' | value)
+license=$(field 'license')
+name=$(field 'name')
+desc=$(field 'desc')
+version=$(field 'versions.stable')
+
+# escape : character that's also used as delimiter
+homepage=$(field 'homepage')
+depends=$(field 'dependencies')
+
+export license name desc version homepage depends
+
+xinst_display
