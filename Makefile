@@ -28,6 +28,7 @@ install:
 
 	install xinst_parse_xbps $(DESTDIR)$(PREFIX)/bin/xinst_parse_xbps
 	install xinst_parse_apt $(DESTDIR)$(PREFIX)/bin/xinst_parse_apt
+	install xinst_parse_brew $(DESTDIR)$(PREFIX)/bin/xinst_parse_brew
 	install xinst_display $(DESTDIR)$(PREFIX)/bin/xinst_display
 
 uninstall:
@@ -38,6 +39,7 @@ uninstall:
 
 	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_parse_xbps
 	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_parse_apt
+	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_parse_brew
 	rm -f $(DESTDIR)$(PREFIX)/bin/xinst_display
 
 link:
